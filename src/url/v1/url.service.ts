@@ -25,7 +25,6 @@ export class UrlService {
       select: ['originalUrl'],
       where: { shortUrlPath: endPoint },
     });
-    console.log(534543, endPoint);
     return url?.originalUrl;
   }
 }
