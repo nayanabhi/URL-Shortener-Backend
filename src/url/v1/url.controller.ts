@@ -7,18 +7,35 @@ import {
   Res,
   NotFoundException,
   Query,
+  UseInterceptors,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { ShortenUrlDto } from './dto/createUrl.dto';
 import { Response } from 'express';
+import { RateLimitInterceptor } from 'src/common/rate-limit.interceptor';
+import { JwtAuthGuard } from 'src/auth/v1/jwt-auth.guard';
+import { Request } from 'express';
+import { RequestWithUser } from './interface/request.interface';
 
 @Controller('v1/url')
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
   @Post('shorten')
-  async shortenUrl(@Body() shortenUrlDto: ShortenUrlDto) {
-    const url = await this.urlService.createShortUrl(shortenUrlDto);
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(RateLimitInterceptor)
+  async shortenUrl(
+    @Body() shortenUrlDto: ShortenUrlDto,
+    @Req() req: RequestWithUser,
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const url = await this.urlService.createShortUrl(
+      shortenUrlDto,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      Number(req?.user?.userId),
+    );
     return { url };
   }
   @Get('redirect')

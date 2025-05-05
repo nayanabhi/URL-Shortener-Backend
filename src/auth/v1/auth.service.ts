@@ -6,6 +6,7 @@ import { RegisterUserDto } from './dto/registerUser.dto';
 import { ExistingUserDto } from './dto/existingUser.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,10 @@ export class AuthService {
   ) {}
 
   generateToken(loginUserDto: LoginUserDto) {
-    return this.jwtService.sign({ email: loginUserDto?.email });
+    return this.jwtService.sign({
+      email: loginUserDto?.email,
+      userId: loginUserDto?.id,
+    });
   }
 
   verifyToken(token: string) {
@@ -34,6 +38,14 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    const saltRounds = 10;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const hashedPassword = await bcrypt.hash(
+      registerUserDto.password,
+      saltRounds,
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    registerUserDto.password = hashedPassword;
     await this.userRepo.save(registerUserDto);
   }
 
@@ -69,12 +81,19 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    if (loginUserDto.password !== alreadyExistingUser.password) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const isMatch = await bcrypt.compare(
+      loginUserDto?.password,
+      alreadyExistingUser?.password,
+    );
+
+    if (!isMatch) {
       throw new HttpException(
         'Unauthorized access: Please check your credentials and try again.',
         HttpStatus.UNAUTHORIZED,
       );
     }
+    loginUserDto.id = alreadyExistingUser?.id;
     return this.generateToken(loginUserDto);
   }
 
