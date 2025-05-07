@@ -1,3 +1,56 @@
+## 🔗 URL Shortener Service
+
+A compact and efficient **URL Shortener Application 🚀 — ideal for generating and managing short links for long URLs.
+
+### ✨ Features
+
+- 🔐 **Shorten long URLs** into easy-to-share links
+- 🚀 **Fast redirection** from short URL to original link
+- 🧩 **Modular & scalable** NestJS architecture
+-  ⚡ **Rate Limiting & Caching** using **Redis** to prevent abuse and improve performance
+-  🌐 **Frontend built with Next.js** for creating, managing, and previewing shortened URLs via a sleek UI
+
+---
+
+### 📌 Example
+
+```http
+POST /shorten
+Body: { "url": "https://example.com/very/long/url" }
+
+Response:
+{
+  "shortUrl": `${domain}/abc123`
+}
+
+GET /abc123
+→ Redirects to: https://example.com/very/long/url
+
+```
+
+## 🛠 Tech Stack
+
+- 🌐 **NestJS** — Backend framework
+- 🗄️ **PostgreSQL / MongoDB / Redis** — (Optional) for URL storage
+- ⚙️ **TypeScript** — Static typing and maintainability
+-  🧠 **Redis** — Used for rate limiting and caching
+- 🖼️ **Next.js** — Frontend for managing and previewing shortened URLs
+
+---
+
+## 📚 Extendable Features
+
+This service is designed to be extensible. You can easily add:
+
+- ✅ **Authentication & authorization** (e.g., API key-based access)
+- 📈 **Detailed analytics** (click counts, referrers, geolocation)
+- 🗓️ **URL expiration dates** or limited-use links
+- 📷 **QR code generation** for shortened URLs
+- 📬 **Email or SMS** link sharing integrations
+-  ♻️ **Auto-expiry** support for temporary URLs (if implemented)
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
