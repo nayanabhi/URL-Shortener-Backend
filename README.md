@@ -1,6 +1,6 @@
 ## 🔗 URL Shortener Service
 
-A compact and efficient **URL Shortener Application 🚀 — ideal for generating and managing short links for long URLs.
+A compact and efficient **URL Shortener Application** 🚀 — ideal for generating and managing short links for long URLs.
 
 ### ✨ Features
 
