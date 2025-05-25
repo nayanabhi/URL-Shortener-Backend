@@ -25,6 +25,10 @@ export class RedisService implements OnModuleDestroy {
     return this.client.del(key);
   }
 
+  async incr(key: string): Promise<number> {
+    return await this.client.incr(key); // This will create the key with an initial value of 0 if it doesn't exist
+  }
+
   getClient(): Redis {
     return this.client;
   }

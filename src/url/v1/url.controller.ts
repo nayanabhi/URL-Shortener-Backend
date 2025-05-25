@@ -31,12 +31,18 @@ export class UrlController {
     @Req() req: RequestWithUser,
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const url = await this.urlService.createShortUrl(
+    const shortUrlPath = await this.urlService.createShortUrl(
       shortenUrlDto,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       Number(req?.user?.userId),
     );
-    return { url };
+    return { shortUrlPath };
+  }
+
+  @Get('checkAlias')
+  async checkAlias(@Query('alias') alias: string) {
+    const available = await this.urlService.isAliasAvailable(alias);
+    return { available };
   }
   @Get('redirect')
   async redirect(@Query('endPoint') endPoint: string, @Res() res: Response) {
