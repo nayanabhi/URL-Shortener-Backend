@@ -9,6 +9,7 @@ A compact and efficient **URL Shortener Application** 🚀 — ideal for generat
 - 🧩 **Modular & scalable** NestJS architecture
 -  ⚡ **Rate Limiting & Caching** using **Redis** to prevent abuse and improve performance
 -  🌐 **Frontend built with Next.js** for creating, managing, and previewing shortened URLs via a sleek UI
+-  📷 QR code generation for shortened URLs
 
 ---
 
@@ -16,7 +17,7 @@ A compact and efficient **URL Shortener Application** 🚀 — ideal for generat
 
 ```http
 POST /shorten
-Body: { "url": "https://example.com/very/long/url" }
+Body: { "originalUrl": "https://example.com/very/long/url", "shortUrlPath" :  "abc123" }
 
 Response:
 {
@@ -45,7 +46,6 @@ This service is designed to be extensible. You can easily add:
 - ✅ **Authentication & authorization** (e.g., API key-based access)
 - 📈 **Detailed analytics** (click counts, referrers, geolocation)
 - 🗓️ **URL expiration dates** or limited-use links
-- 📷 **QR code generation** for shortened URLs
 - 📬 **Email or SMS** link sharing integrations
 -  ♻️ **Auto-expiry** support for temporary URLs (if implemented)
 
