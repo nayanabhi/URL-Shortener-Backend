@@ -34,7 +34,7 @@ export class UrlService {
     if (originalUrlInDatabase) {
       await this.redisService.set(
         `originalUrl:${shortenUrlDto?.originalUrl}`,
-        originalUrlInDatabase.originalUrl,
+        originalUrlInDatabase.shortUrlPath,
       );
       return originalUrlInDatabase?.shortUrlPath;
     }

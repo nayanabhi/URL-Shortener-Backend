@@ -16,16 +16,30 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  generateTokenWithExipry(loginUserDto: LoginUserDto, expiry: string) {
+    return this.jwtService.sign(
+      {
+        email: loginUserDto?.email,
+        userId: loginUserDto?.id,
+      },
+      {
+        secret: process.env.JWT_SECRET,
+        expiresIn: `${expiry}`,
+      },
+    );
+  }
+
   generateToken(loginUserDto: LoginUserDto) {
-    return this.jwtService.sign({
-      email: loginUserDto?.email,
-      userId: loginUserDto?.id,
-    });
+    const accessToken = this.generateTokenWithExipry(loginUserDto, '5m');
+    const refreshToken = this.generateTokenWithExipry(loginUserDto, '7d');
+    return { accessToken, refreshToken };
   }
 
   verifyToken(token: string) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.jwtService.verify(token);
+    return this.jwtService.verify(token, {
+      secret: `${process.env.JWT_SECRET}`,
+    });
   }
 
   async register(registerUserDto: RegisterUserDto) {
@@ -94,7 +108,8 @@ export class AuthService {
       );
     }
     loginUserDto.id = alreadyExistingUser?.id;
-    return this.generateToken(loginUserDto);
+    const { accessToken, refreshToken } = this.generateToken(loginUserDto);
+    return { accessToken, refreshToken };
   }
 
   async findUserByEmailOrPhone(
